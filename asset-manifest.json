@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "./static/css/main.fe07694a.css",
-    "main.js": "./static/js/main.0ce64140.js",
-    "static/media/crousalimage1.jpg": "./static/media/crousalimage1.c84c89067e9162b3d580.jpg",
-    "static/media/site-background.jpg": "./static/media/site-background.b2ea606da96d0664441d.jpg",
-    "static/media/contact.png": "./static/media/contact.c414fe97abdfcc3bd2db.png",
-    "static/media/crousalimage3.jpg": "./static/media/crousalimage3.81107f7c672a7fe35808.jpg",
-    "static/media/crousalimage2.jpg": "./static/media/crousalimage2.fa8817c51074d100b67e.jpg",
-    "static/media/crousalimage4.jpg": "./static/media/crousalimage4.a8f5c166ec478244cc9b.jpg",
-    "static/media/indiamart-logo.png": "./static/media/indiamart-logo.48cac4125fd383fa552a.png",
-    "static/media/runip2-logo.png": "./static/media/runip2-logo.0e68ba4ebad35d1128f0.png",
-    "index.html": "./index.html",
-    "main.fe07694a.css.map": "./static/css/main.fe07694a.css.map",
-    "main.0ce64140.js.map": "./static/js/main.0ce64140.js.map"
+    "main.css": "/equipments/static/css/main.28c7187f.css",
+    "main.js": "/equipments/static/js/main.a22792b4.js",
+    "static/media/crousalimage1.jpg": "/equipments/static/media/crousalimage1.c84c89067e9162b3d580.jpg",
+    "static/media/site-background.jpg": "/equipments/static/media/site-background.b2ea606da96d0664441d.jpg",
+    "static/media/contact.png": "/equipments/static/media/contact.c414fe97abdfcc3bd2db.png",
+    "static/media/crousalimage3.jpg": "/equipments/static/media/crousalimage3.81107f7c672a7fe35808.jpg",
+    "static/media/crousalimage2.jpg": "/equipments/static/media/crousalimage2.fa8817c51074d100b67e.jpg",
+    "static/media/crousalimage4.jpg": "/equipments/static/media/crousalimage4.a8f5c166ec478244cc9b.jpg",
+    "static/media/indiamart-logo.png": "/equipments/static/media/indiamart-logo.48cac4125fd383fa552a.png",
+    "static/media/runip2-logo.png": "/equipments/static/media/runip2-logo.0e68ba4ebad35d1128f0.png",
+    "index.html": "/equipments/index.html",
+    "main.28c7187f.css.map": "/equipments/static/css/main.28c7187f.css.map",
+    "main.a22792b4.js.map": "/equipments/static/js/main.a22792b4.js.map"
   },
   "entrypoints": [
-    "static/css/main.fe07694a.css",
-    "static/js/main.0ce64140.js"
+    "static/css/main.28c7187f.css",
+    "static/js/main.a22792b4.js"
   ]
 }

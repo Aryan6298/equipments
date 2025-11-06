@@ -1,0 +1,352 @@
+:root {
+  --bg: #00000050;
+  --neon: #00eaff;
+  --neon-strong: rgba(0, 190, 255, 0.95);
+  --neon-glow: rgba(0, 170, 255, 0.25);
+  --text: #ffffff;
+}
+
+/* Canvas */
+.neon-canvas {
+  width: 100%;
+  height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Container that holds everything.
+   We add ::before and ::after here to create the two vertical glowing spines.
+*/
+.neon-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1400px;
+  max-height: 820px;
+}
+
+/* --- CSS vertical spines (Option 2) --- */
+/* The two pseudo-elements draw long glowing vertical bars centered horizontally.
+   They are hidden initially and fade in only when .started is active.
+*/
+.neon-container::before,
+.neon-container::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px; /* visible thickness */
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 2;
+  /* gradient and soft glow */
+  background: linear-gradient(to bottom, rgba(122,241,255,1), rgba(0,208,255,1), rgba(0,153,255,1));
+  box-shadow: 0 0 20px rgba(0,200,255,0.85), inset 0 0 12px rgba(0,210,255,0.12);
+  mix-blend-mode: screen;
+  opacity: 0; /* HIDDEN INITIALLY */
+  transition: opacity 400ms ease-in-out, transform 400ms ease-in-out;
+  transform-origin: center;
+}
+
+/* top spine (center -> Idea F) */
+.neon-container::before {
+  top: calc(24%);
+  height: 130px;
+  transform-origin: top center;
+}
+
+/* bottom spine (center -> Idea C) */
+.neon-container::after {
+  top: calc(58%);
+  height: 130px;
+  transform-origin: top center;
+}
+
+/* SHOW them when started */
+.neon-container.started::before,
+.neon-container.started::after {
+  opacity: 0.95;
+  transform: translateX(-50%) scaleY(1);
+}
+
+/* SVG sits above most things so neon stroke overlays properly */
+.neon-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* Base style for neon line: invisible until revealed/animated */
+.neon-line {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  opacity: 0; /* hidden until user clicks */
+  transition: opacity 260ms linear, stroke-dashoffset 1100ms cubic-bezier(.15,.9,.2,1);
+}
+
+/* When animating, lines animate and also become visible via container.started */
+.neon-line.anim {
+  animation: drawAll 1100ms cubic-bezier(.15,.9,.2,1) forwards;
+  filter: drop-shadow(0 0 10px rgba(0,200,255,0.85)) blur(0.6px);
+}
+
+/* reveal lines when started */
+.neon-container.started .neon-line {
+  opacity: 1;
+}
+
+/* synchronized draw animation */
+@keyframes drawAll {
+  0% {
+    stroke-dashoffset: 1200;
+    opacity: 0;
+    stroke-width: 3;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    stroke-width: 3.6;
+  }
+}
+
+/* Connector group subtle back-glow */
+.connector-group {
+  mix-blend-mode: screen;
+}
+
+/* Center box */
+.center-box {
+  position: absolute;
+  z-index: 7; /* above CSS spine so center box doesn't get hidden */
+  width: 200px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 238, 194, 0.919);
+  cursor: pointer;
+  text-align: center;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  user-select: none;
+  backdrop-filter: blur(3px);
+}
+
+.center-box:hover {
+  transform: translate(-50%, -50%) scale(1.04);
+  border-color: var(--neon-strong);
+  box-shadow: 0 10px 40px rgba(0,170,255,0.12), 0 0 30px rgba(0,180,255,0.06) inset;
+}
+
+.center-heading {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  text-shadow: 0 0 8px rgba(0,200,255,0.18);
+}
+
+.center-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 6px;
+}
+
+/* Outer boxes: bigger so they can hold an image + overlayed heading */
+.outer-box {
+  position: absolute;
+  z-index: 7; /* above the spine so boxes appear in front */
+  min-width: 220px;      /* increased width */
+  min-height: 110px;     /* increased height */
+  padding: 0;            /* we use inner layout for image/title */
+  border-radius: 14px;
+  background: rgba(0,0,0,0.45); /* darker so overlay text reads well when no image */
+  border: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text);
+  transition:
+    box-shadow 300ms ease,
+    border-color 300ms ease,
+    transform 260ms ease,
+    opacity 260ms linear,
+    background 300ms ease;
+  overflow: hidden; /* clip image to rounded corners */
+
+  /* initially hidden until user clicks */
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.98);
+  pointer-events: none;
+}
+
+/* reveal outer boxes when started */
+.neon-container.started .outer-box {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+/* Visually appealing hover effects */
+/* scale up, neon glow pulse, inset highlight and shimmer border */
+.outer-box:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  border-color: var(--neon-strong);
+  background: linear-gradient(180deg, rgba(0,30,40,0.55), rgba(0,20,30,0.48));
+  box-shadow:
+    0 0 22px rgba(0, 200, 255, 0.45),
+    0 0 48px rgba(0, 200, 255, 0.30),
+    inset 0 0 18px rgba(0, 255, 255, 0.08);
+  animation: pulseGlow 1.8s ease-in-out infinite;
+}
+
+/* shimmer border pseudo-element */
+.outer-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  z-index: 9;
+  background: linear-gradient(120deg, transparent 0%, rgba(0,255,255,0.14) 30%, rgba(122,241,255,0.22) 50%, rgba(0,255,255,0.14) 70%, transparent 100%);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  mix-blend-mode: screen;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* activate shimmer on hover */
+.outer-box:hover::after {
+  opacity: 1;
+  animation: shimmer 1.8s linear infinite;
+}
+
+/* optional inner highlight (small top rim) */
+.outer-box::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  height: 8px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(122,241,255,0.06), rgba(0,208,255,0.06));
+  opacity: 0;
+  transition: opacity 260ms ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.outer-box:hover::before {
+  opacity: 1;
+}
+
+/* Glow animation */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 18px rgba(0, 200, 255, 0.35),
+      0 0 36px rgba(0, 200, 255, 0.20),
+      inset 0 0 12px rgba(0, 255, 255, 0.06);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(0, 255, 255, 0.6),
+      0 0 60px rgba(0, 200, 255, 0.38),
+      inset 0 0 18px rgba(0, 255, 255, 0.18);
+  }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+}
+
+/* inner media container */
+.outer-media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+/* empty media (no image) stays dark */
+.outer-media.empty {
+  background: rgba(0,0,0,0.45);
+}
+
+/* image fills the box with low brightness so overlay text pops */
+.outer-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.35) saturate(0.9);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* title overlay centered above the media */
+.outer-title {
+  position: relative; /* sits above the .outer-media since it's later in DOM */
+  z-index: 11;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.28); /* subtle dark plaque so text is legible */
+  backdrop-filter: blur(4px);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  text-shadow: 0 2px 14px rgba(0,200,255,0.14);
+}
+
+/* make glow visible when activated */
+.outer-box.outer-glow {
+  border-color: var(--neon-strong);
+  box-shadow: 0 8px 36px var(--neon-glow), 0 0 18px rgba(0,200,255,0.08) inset;
+}
+
+/* Dot at endpoint */
+.neon-dot {
+  fill: var(--neon);
+  opacity: 0; /* hidden until started */
+  filter: drop-shadow(0 0 14px rgba(0,200,255,0.95));
+  transition: opacity 240ms ease, r 240ms ease;
+}
+
+/* show dots when started */
+.neon-container.started .neon-dot {
+  opacity: 1;
+}
+
+/* small responsive tweak */
+@media (max-width: 720px) {
+  /* .center-box { width: 160px; height: 82px; } */
+  .outer-box { min-width: 140px; min-height: 68px; border-radius: 10px; }
+
+
+  /* .neon-container::before { top: calc(50% - 90px); height: 100px; }
+  .neon-container::after { top: calc(50% + 12px); height: 180px; } */
+}

@@ -1,7 +1,8 @@
 {
   "files": {
-    "main.css": "/equipments/static/css/main.28c7187f.css",
-    "main.js": "/equipments/static/js/main.a22792b4.js",
+    "main.css": "/equipments/static/css/main.6aed1eee.css",
+    "main.js": "/equipments/static/js/main.72cf2601.js",
+    "static/js/453.117b0875.chunk.js": "/equipments/static/js/453.117b0875.chunk.js",
     "static/media/crousalimage1.jpg": "/equipments/static/media/crousalimage1.c84c89067e9162b3d580.jpg",
     "static/media/site-background.jpg": "/equipments/static/media/site-background.b2ea606da96d0664441d.jpg",
     "static/media/contact.png": "/equipments/static/media/contact.c414fe97abdfcc3bd2db.png",
@@ -11,11 +12,12 @@
     "static/media/indiamart-logo.png": "/equipments/static/media/indiamart-logo.48cac4125fd383fa552a.png",
     "static/media/runip2-logo.png": "/equipments/static/media/runip2-logo.0e68ba4ebad35d1128f0.png",
     "index.html": "/equipments/index.html",
-    "main.28c7187f.css.map": "/equipments/static/css/main.28c7187f.css.map",
-    "main.a22792b4.js.map": "/equipments/static/js/main.a22792b4.js.map"
+    "main.6aed1eee.css.map": "/equipments/static/css/main.6aed1eee.css.map",
+    "main.72cf2601.js.map": "/equipments/static/js/main.72cf2601.js.map",
+    "453.117b0875.chunk.js.map": "/equipments/static/js/453.117b0875.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.28c7187f.css",
-    "static/js/main.a22792b4.js"
+    "static/css/main.6aed1eee.css",
+    "static/js/main.72cf2601.js"
   ]
 }

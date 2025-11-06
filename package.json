@@ -20,13 +20,17 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "homepage": ".",
+  "homepage": "https://Aryan6298.github.io/equipments",
   "scripts": {
-    "start": "react-scripts start",
+ 
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+      "start": "cross-env PUBLIC_URL= react-scripts start",
+
+
+  "deploy": "gh-pages -d build",
+    "test": "react-scripts test",
+    
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "gh-pages": "^6.3.0"
   }
 }

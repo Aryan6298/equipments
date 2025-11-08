@@ -8,7 +8,7 @@ import 'aos/dist/aos.css';
 import g1 from '../assets/images/crousal/crousalimage2.jpg';
 import g2 from '../assets/images/crousal/crousalimage3.jpg';
 import g3 from '../assets/images/crousal/crousalimage4.jpg';
-import g4 from '../assets/images/contact.png'; // reuse contact placeholder
+import g4 from '../assets/images/contact.webp'; // reuse contact placeholder
 
 const images = [
   { src: g1, alt: 'Gallery image 1', caption: 'Indoor Arena — turnkey solution' },
@@ -263,6 +263,10 @@ export default function Gallery() {
           .lightbox-inner { max-width: 95%; }
           .lightbox-img { height: 50vh; }
         }
+                      @media (max-width: 768px) {
+  .container{
+    margin-top: 10vh !important;
+  }
       `}</style>
 
       <div className="container py-4">

@@ -6,7 +6,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import crousalimage1 from "../assets/images/crousal/crousalimage1.jpg";
 import crousalimage2 from "../assets/images/crousal/crousalimage2.jpg";
 import crousalimage3 from "../assets/images/crousal/crousalimage3.jpg";
-import crousalimage4 from "../assets/images/crousal/crousalimage4.jpg";
+import crousalimage4 from "../assets/images/group.avif";
 
 const HeroSection = () => {
   return (
@@ -29,14 +29,14 @@ const HeroSection = () => {
           display: block;
         }
 
-        /* dark overlay for better text readability */
-        .carousel-item::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.5) 100%);
-          pointer-events: none;
-        }
+        // /* dark overlay for better text readability */
+        // .carousel-item::before {
+        //   content: "";
+        //   position: absolute;
+        //   inset: 0;
+        //   background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.5) 100%);
+        //   pointer-events: none;
+        // }
 
         .carousel-caption {
           bottom: 22%;
@@ -67,17 +67,78 @@ const HeroSection = () => {
           opacity: 0.95;
         }
 
-        /* button style (example CTA) */
+        /* NEW: hero CTA - base */
         .hero-cta {
           margin-top: 1rem;
           display: inline-block;
-          background: linear-gradient(90deg,#ff3c00,#ff6f00);
-          color: #fff;
-          padding: 0.6rem 1.1rem;
-          border-radius: 30px;
-          font-weight: 700;
+          position: relative;
+          padding: 0.68rem 1.16rem;
+          border-radius: 999px;
+          font-weight: 800;
           text-decoration: none;
-          box-shadow: 0 8px 24px rgba(255,108,64,0.18);
+          color: #05110b;
+          letter-spacing: .4px;
+          z-index: 1;
+
+          /* animated gradient background */
+          background: linear-gradient(90deg, #1fb85a 0%, #2fe37a 40%, #9be78f 100%);
+          background-size: 200% 100%;
+          transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms ease, background-position 420ms ease;
+          box-shadow: 0 6px 20px rgba(47,227,122,0.12), 0 2px 6px rgba(0,0,0,0.35);
+          border: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+        }
+
+        /* subtle icon/tick inside button (optional) */
+        .hero-cta .cta-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: rgba(5,17,11,0.12);
+          box-shadow: inset 0 -2px 0 rgba(255,255,255,0.2);
+        }
+
+        /* animated pseudo-underline accent */
+        .hero-cta::after {
+          content: "";
+          position: absolute;
+          left: 12%;
+          right: 12%;
+          bottom: -8px;
+          height: 4px;
+          border-radius: 8px;
+          background: linear-gradient(90deg, rgba(47,227,122,0.28), rgba(255,255,255,0.06));
+          opacity: 0;
+          transform: translateY(6px);
+          transition: opacity 220ms ease, transform 220ms cubic-bezier(.2,.9,.3,1);
+          pointer-events: none;
+        }
+
+        /* hover/focus: lift + gradient shift + glow */
+        .hero-cta:hover,
+        .hero-cta:focus {
+          transform: translateY(-6px) scale(1.02);
+          background-position: 100% 0; /* animate gradient */
+          box-shadow: 0 18px 44px rgba(47,227,122,0.14), 0 6px 18px rgba(0,0,0,0.5);
+          outline: none;
+        }
+
+        .hero-cta:hover::after,
+        .hero-cta:focus::after {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* stronger focus ring for keyboard users */
+        .hero-cta:focus-visible {
+          box-shadow: 0 0 0 4px rgba(47,227,122,0.14), 0 12px 30px rgba(0,0,0,0.45);
+        }
+
+        /* dark-mode fallback: if background-too-bright, invert text color */
+        @media (prefers-color-scheme: dark) {
+          .hero-cta { color: #04110a; }
         }
 
         /* smaller screens */
@@ -85,6 +146,7 @@ const HeroSection = () => {
           .carousel-caption { bottom: 18%; padding: 0.9rem 1rem; }
           .carousel-caption h2 { font-size: 2rem; }
           .carousel-caption p { font-size: 0.98rem; }
+          .hero-cta { padding: 0.58rem 1rem; }
         }
 
         @media (max-width: 576px) {
@@ -125,7 +187,10 @@ const HeroSection = () => {
             <div className="carousel-caption">
               <h2>Industrial-Grade Racks & Rigs</h2>
               <p>Heavy-duty squat racks and rigs engineered for safety, stability and lifetime performance.</p>
-              <a className="hero-cta" href="/services">View More</a>
+              <a className="hero-cta" href="/services">
+                <span className="cta-dot" aria-hidden="true"></span>
+                View More
+              </a>
             </div>
           </div>
 
@@ -134,7 +199,10 @@ const HeroSection = () => {
             <div className="carousel-caption">
               <h2>Competition Barbells & Plates</h2>
               <p>Precision-machined barbells and calibrated plates that deliver consistent performance for athletes.</p>
-              <a className="hero-cta" href="/services">View More</a>
+              <a className="hero-cta" href="/services">
+                <span className="cta-dot" aria-hidden="true"></span>
+                View More
+              </a>
             </div>
           </div>
 
@@ -143,7 +211,10 @@ const HeroSection = () => {
             <div className="carousel-caption">
               <h2>Functional Training Systems</h2>
               <p>Modular rigs, plyo platforms and conditioning gear designed to power group and individual workouts.</p>
-              <a className="hero-cta" href="/services">View Mores</a>
+              <a className="hero-cta" href="/services">
+                <span className="cta-dot" aria-hidden="true"></span>
+                View More
+              </a>
             </div>
           </div>
 
@@ -152,7 +223,10 @@ const HeroSection = () => {
             <div className="carousel-caption">
               <h2>Recovery Tools & Accessories</h2>
               <p>From mats to mobility tools — everything you need for recovery and peak athletic performance.</p>
-              <a className="hero-cta" href="/services">View More</a>
+              <a className="hero-cta" href="/services">
+                <span className="cta-dot" aria-hidden="true"></span>
+                View More
+              </a>
             </div>
           </div>
         </div>

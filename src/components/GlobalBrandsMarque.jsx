@@ -27,26 +27,22 @@ import Marquee from "react-fast-marquee";
 // import gem from "../assets/images/brands/gem.png";
 
 
-import matrix from "../assets/images/crousal/crousalimage1.jpg";
-import lifefitness from "../assets/images/crousal/crousalimage1.jpg";
-import cosco from "../assets/images/crousal/crousalimage1.jpg";
-import aerofit from "../assets/images/crousal/crousalimage1.jpg";
-import usi from "../assets/images/crousal/crousalimage1.jpg";
-import california from "../assets/images/crousal/crousalimage1.jpg";
-import sparnod from "../assets/images/crousal/crousalimage1.jpg";
-import energie from "../assets/images/crousal/crousalimage1.jpg";
-import vision from "../assets/images/crousal/crousalimage1.jpg";
-import bodysolid from "../assets/images/crousal/crousalimage1.jpg";
-import crest from "../assets/images/crousal/crousalimage1.jpg";
-import supreme from "../assets/images/crousal/crousalimage1.jpg";
-import lining from "../assets/images/crousal/crousalimage1.jpg";
-import nivia from "../assets/images/crousal/crousalimage1.jpg";
-import yonex from"../assets/images/crousal/crousalimage1.jpg";
-import badminton from "../assets/images/crousal/crousalimage1.jpg";
-import footballturf from "../assets/images/crousal/crousalimage1.jpg";
-import opengym from "../assets/images/crousal/crousalimage1.jpg";
-import gymfloor from "../assets/images/crousal/crousalimage1.jpg";
-import gem from "../assets/images/crousal/crousalimage1.jpg";
+import matrix from "../assets/images/brands-logo/Matrix.jpg";
+import lifefitness from "../assets/images/brands-logo/lifefitness.jpg";
+import cosco from "../assets/images/brands-logo/cosco.jpeg";
+import aerofit from "../assets/images/brands-logo/aerofit.jpeg";
+import usi from "../assets/images/brands-logo/usi.png";
+import california from "../assets/images/brands-logo/california.png";
+import sparnod from "../assets/images/brands-logo/sparod.png";
+import energie from "../assets/images/brands-logo/energiefitness.png";
+import vision from "../assets/images/brands-logo/vision.png";
+import bodysolid from "../assets/images/brands-logo/bodysolid.png";
+import crest from "../assets/images/brands-logo/crest.png";
+import supreme from "../assets/images/brands-logo/supreme.png";
+import lining from "../assets/images/brands-logo/lining.png";
+import nivia from "../assets/images/brands-logo/nivia.png";
+import yonex from"../assets/images/brands-logo/yonex.png";
+
 const GlobalBrandsMarquee = () => {
   const [expanded, setExpanded] = useState(false);
   const timerRef = useRef(null);
@@ -68,11 +64,11 @@ const GlobalBrandsMarquee = () => {
     lining,
     nivia,
     yonex,
-    badminton,
-    footballturf,
-    opengym,
-    gymfloor,
-    gem,
+    // badminton,
+    // footballturf,
+    // opengym,
+    // gymfloor,
+    // gem,
   ];
 
   useEffect(() => {

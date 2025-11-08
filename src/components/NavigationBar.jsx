@@ -1,45 +1,69 @@
 // src/components/NavigationBarBootstrap.js
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/runip2-logo.png';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const NavigationBarBootstrap = () => {
+  // initial value will be set on mount to be safe for SSR
   const [marginTop, setMarginTop] = useState('30px');
-  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
-  const collapseRef = useRef(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // controls collapse
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false); // mobile services dropdown
+  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false); // desktop hover dropdown
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // navbar height offset (adjust if your navbar is taller/shorter)
+  // navbar height offset used by scroll-to helpers
   const NAV_OFFSET = 80;
 
-  // Collapse nav on link click (keeps mobile UX tidy)
-  const handleNavLinkClick = useCallback(() => {
-    if (window.innerWidth < 992 && collapseRef.current) {
-      const bsCollapse = window.bootstrap && window.bootstrap.Collapse
-        ? window.bootstrap.Collapse
-        : window.Collapse;
-      if (bsCollapse) {
-        try {
-          const instance = bsCollapse.getInstance
-            ? bsCollapse.getInstance(collapseRef.current) || new bsCollapse(collapseRef.current, { toggle: false })
-            : new bsCollapse(collapseRef.current, { toggle: false });
-          instance.hide();
-        } catch (err) {
-          if (collapseRef.current.classList.contains('show')) {
-            collapseRef.current.classList.remove('show');
-          }
-        }
-      } else if (collapseRef.current.classList.contains('show')) {
-        collapseRef.current.classList.remove('show');
+  // Helper: returns the "top margin when at page top" depending on viewport
+  const topMarginForViewport = () => {
+    // threshold aligned with your navbar/mobile styles (lg breakpoint of 992px)
+    if (typeof window === 'undefined') return '30px';
+    return window.innerWidth < 787 ? '11.4vh' : '30px';
+  };
+
+  // On mount set an initial marginTop based on viewport (ensures mobile starts a little lower)
+  useEffect(() => {
+    setMarginTop(topMarginForViewport());
+
+    // keep margin correct if user resizes (and is at top)
+    const onResize = () => {
+      if (window.scrollY <= 0) {
+        setMarginTop(topMarginForViewport());
       }
-    }
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
     setMobileDropdownOpen(false);
+    setDesktopDropdownOpen(false);
+  }, [location.pathname]);
+
+  // Show/hide navbar margin on scroll (mobile uses smaller initial offset)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY <= 0) {
+        // at top: use viewport-aware top margin
+        setMarginTop(topMarginForViewport());
+      } else {
+        // scrolled: collapse margin
+        setMarginTop('0px');
+      }
+    };
+
+    // run once to ensure correct state if user loads at scrolled position
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // smooth scroll helper (accounts for fixed navbar offset)
@@ -52,50 +76,48 @@ const NavigationBarBootstrap = () => {
     window.scrollTo({ top, behavior: 'smooth' });
   }, []);
 
-  // When route (location) changes and contains a hash, attempt to scroll to it.
+  // When route changes with a hash (e.g., /services#foo), scroll to target
   useEffect(() => {
     if (location.pathname === '/services' && location.hash) {
       const id = location.hash.replace('#', '');
-      // small timeout to let the page render (images/AOS/layout)
       const t = setTimeout(() => scrollToId(id), 120);
       return () => clearTimeout(t);
     }
-    // If no hash and on /services, scroll to top of services container?
     return undefined;
   }, [location, scrollToId]);
+
+  // Reusable nav link click handler (closes mobile menu)
+  const handleNavLinkClick = useCallback((path) => {
+    setMobileMenuOpen(false);
+    setMobileDropdownOpen(false);
+    if (path) navigate(path);
+  }, [navigate]);
 
   // Handle clicking a service dropdown item
   const handleServiceClick = (e, sectionId) => {
     e && e.preventDefault();
-    handleNavLinkClick();
+    setMobileMenuOpen(false);
+    setMobileDropdownOpen(false);
 
     if (location.pathname === '/services') {
-      // already on services page -> just scroll
       scrollToId(sectionId);
-      // optionally update the URL hash without reloading
       if (window.history && window.history.replaceState) {
         window.history.replaceState(null, '', `/services#${sectionId}`);
       }
     } else {
-      // navigate to /services with hash then scroll after navigation (use effect above also handles it)
       navigate(`/services#${sectionId}`);
-      // fallback scroll after short delay in case effect timing differs
-      setTimeout(() => scrollToId(sectionId), 300);
+      // fallback scroll (in case navigation rendering differs)
+      setTimeout(() => scrollToId(sectionId), 320);
     }
   };
 
-  // show/hide navbar on scroll (existing behaviour)
-  useEffect(() => {
-    const handleScroll = () => setMarginTop(window.scrollY <= 0 ? '30px' : '0px');
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Toggle mobile menu collapse
+  const toggleMobileMenu = () => setMobileMenuOpen((v) => !v);
 
-  const handleDropdownToggle = (e) => {
-    if (window.innerWidth < 992) {
-      e.preventDefault();
-      setMobileDropdownOpen((open) => !open);
-    }
+  // Toggle mobile dropdown for services (accordion-like)
+  const toggleMobileDropdown = (e) => {
+    e && e.preventDefault();
+    setMobileDropdownOpen((v) => !v);
   };
 
   return (
@@ -106,7 +128,7 @@ const NavigationBarBootstrap = () => {
           background-color: #0f0f0f !important;
           transition: all 0.3s ease-in-out;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-          overflow: visible; /* ensure dropdown can overflow */
+          overflow: visible;
         }
 
         .logo-img {
@@ -252,7 +274,38 @@ const NavigationBarBootstrap = () => {
 
         .navbar-toggler {
           border: none;
-          filter: invert(100%);
+          color: #fff;
+        }
+
+        .navbar-toggler-icon-custom {
+          display: inline-block;
+          width: 24px;
+          height: 18px;
+          position: relative;
+        }
+
+        .navbar-toggler-icon-custom span {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: #fff;
+          border-radius: 2px;
+          transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .navbar-toggler-icon-custom span:nth-child(1) { top: 0; }
+        .navbar-toggler-icon-custom span:nth-child(2) { top: 8px; }
+        .navbar-toggler-icon-custom span:nth-child(3) { top: 16px; }
+
+        .navbar-toggler.open .navbar-toggler-icon-custom span:nth-child(1) {
+          transform: translateY(8px) rotate(45deg);
+        }
+        .navbar-toggler.open .navbar-toggler-icon-custom span:nth-child(2) {
+          opacity: 0;
+        }
+        .navbar-toggler.open .navbar-toggler-icon-custom span:nth-child(3) {
+          transform: translateY(-8px) rotate(-45deg);
         }
 
         .navbar-nav .nav-item { position: relative; }
@@ -264,7 +317,7 @@ const NavigationBarBootstrap = () => {
       `}</style>
 
       <nav
-        className="navbar navbar-expand-lg shadow-sm fixed-top"
+        className="navbar navbar-expand-lg fixed-top shadow-sm"
         style={{ zIndex: 1090, marginTop }}
       >
         <div className="container-fluid px-4">
@@ -272,37 +325,53 @@ const NavigationBarBootstrap = () => {
           <Link
             className="navbar-brand d-flex align-items-center gap-2"
             to="/"
-            onClick={() => { handleNavLinkClick(); navigate('/'); }}
+            onClick={() => handleNavLinkClick('/')}
             aria-label="Go to Home"
           >
             <img src={logo} alt="RUNIP2 Logo" className="rounded logo-img" />
           </Link>
 
-          {/* Toggler */}
+          {/* Toggler (React-controlled) */}
           <button
-            className="navbar-toggler"
+            className={`navbar-toggler ${mobileMenuOpen ? 'open' : ''}`}
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNavbar"
             aria-controls="mainNavbar"
-            aria-expanded="false"
+            aria-expanded={mobileMenuOpen}
             aria-label="Toggle navigation"
+            onClick={toggleMobileMenu}
           >
-            <span className="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon-custom" aria-hidden>
+              <span></span><span></span><span></span>
+            </span>
           </button>
 
-          {/* Navigation Links */}
-          <div className="collapse navbar-collapse justify-content-center" id="mainNavbar" ref={collapseRef}>
+          {/* Navigation Links (collapse controlled by state) */}
+          <div
+            id="mainNavbar"
+            className={`collapse navbar-collapse justify-content-center ${mobileMenuOpen ? 'show' : ''}`}
+          >
             <ul className="navbar-nav mb-2 mb-lg-0 gap-lg-3">
               <li className="nav-item">
-                <NavLink className="nav-link" to="/" onClick={() => { handleNavLinkClick(); navigate('/'); }}>Home</NavLink>
+                <NavLink
+                  className="nav-link"
+                  to="/"
+                  onClick={() => handleNavLinkClick('/')}
+                >
+                  Home
+                </NavLink>
               </li>
 
               <li className="nav-item">
-                <NavLink className="nav-link" to="/about-us" onClick={() => { handleNavLinkClick(); navigate('/about-us'); }}>About Us</NavLink>
+                <NavLink
+                  className="nav-link"
+                  to="/about-us"
+                  onClick={() => handleNavLinkClick('/about-us')}
+                >
+                  About Us
+                </NavLink>
               </li>
 
-              {/* Dropdown */}
+              {/* Services Dropdown */}
               <li
                 className={`nav-item dropdown ${desktopDropdownOpen ? 'show' : ''}`}
                 onMouseEnter={() => setDesktopDropdownOpen(true)}
@@ -314,10 +383,12 @@ const NavigationBarBootstrap = () => {
                     to="/services"
                     onClick={(e) => {
                       if (window.innerWidth < 992) {
+                        // mobile: clicking main label toggles mobile dropdown
                         e.preventDefault();
-                        setMobileDropdownOpen(!mobileDropdownOpen);
+                        toggleMobileDropdown(e);
                       } else {
-                        handleNavLinkClick();
+                        // desktop: go to services page and scroll top
+                        handleNavLinkClick('/services');
                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
                       }
                     }}
@@ -325,23 +396,23 @@ const NavigationBarBootstrap = () => {
                     Our Services
                   </NavLink>
 
-                  <span
-                    className="dropdown-toggle d-flex align-items-center"
-                    role="button"
-                    onClick={handleDropdownToggle}
-                    aria-label="Toggle programs dropdown"
-                    aria-haspopup="true"
+                  {/* separate small triangle icon clickable for mobile too */}
+                  <button
+                    className="btn btn-link p-0 ms-1 d-lg-none"
+                    onClick={toggleMobileDropdown}
                     aria-expanded={mobileDropdownOpen}
+                    aria-label="Toggle services submenu"
+                    style={{ color: 'inherit' }}
                   >
                     <IoMdArrowDropdown
                       className="dropdown-icon"
                       style={{ transform: mobileDropdownOpen ? 'rotate(180deg)' : undefined }}
                     />
-                  </span>
+                  </button>
                 </div>
 
-                {/* Mobile Dropdown */}
-                <ul className={`mobile-dropdown${mobileDropdownOpen ? ' open' : ''} d-lg-none`}>
+                {/* Mobile (accordion style) */}
+                <ul className={`mobile-dropdown d-lg-none${mobileDropdownOpen ? ' open' : ''}`} role="menu" aria-label="Services submenu">
                   <li>
                     <a
                       href="/services#equipment-supply"
@@ -398,8 +469,8 @@ const NavigationBarBootstrap = () => {
                   </li>
                 </ul>
 
-                {/* Desktop Dropdown */}
-                <ul className="dropdown-menu d-none d-lg-block" role="menu" aria-label="Programs submenu">
+                {/* Desktop dropdown */}
+                <ul className="dropdown-menu d-none d-lg-block" role="menu" aria-label="Services submenu">
                   <li>
                     <a
                       href="/services#equipment-supply"
@@ -457,8 +528,44 @@ const NavigationBarBootstrap = () => {
                 </ul>
               </li>
 
-              <li className="nav-item"><NavLink className="nav-link" to="/mediafeatures" onClick={() => { handleNavLinkClick(); navigate('/mediafeatures'); }}>Media Features</NavLink></li>
-              <li className="nav-item"><NavLink className="nav-link" to="/contact" onClick={() => { handleNavLinkClick(); navigate('/contact'); }}>Contact Us</NavLink></li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  to="/products"
+                  onClick={() => handleNavLinkClick('/products')}
+                >
+                  Products
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  to="/mediafeatures"
+                  onClick={() => handleNavLinkClick('/mediafeatures')}
+                >
+                  Media Features
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  to="/clients"
+                  onClick={() => handleNavLinkClick('/clients')}
+                >
+                  Clients
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  to="/contact"
+                  onClick={() => handleNavLinkClick('/contact')}
+                >
+                  Contact Us
+                </NavLink>
+              </li>
             </ul>
           </div>
         </div>

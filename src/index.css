@@ -7,9 +7,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /* 🌄 Background image setup */
-  background-image: url('./assets/images/site-background.jpg'); /* ✅ path */
+  background-image: url('./assets/images/background01.jpg'); /* ✅ path */
   background-size: cover;
-  background-position: center 10%;   /* ✅ Moves focus slightly lower (top=0%, bottom=100%) */
+  background-position: center 90%;   /* ✅ Moves focus slightly lower (top=0%, bottom=100%) */
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #ffffff;

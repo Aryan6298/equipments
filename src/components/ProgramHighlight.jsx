@@ -1,34 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import studyMallImg from '../assets/images/crousal/crousalimage4.jpg';
-import studyFinImg from '../assets/images/crousal/crousalimage2.jpg';
-import digiLibraryImg from '../assets/images/crousal/crousalimage1.jpg';
+// AOS imports
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+import studyMallImg from '../assets/images/products/matrix-fitness-treadmill-500x500.webp';
+import studyFinImg from '../assets/images/products/revo-220-cosco-treadmill-500x500.webp';
+import digiLibraryImg from '../assets/images/products/ce-3013-incline-press-machine-500x500.webp';
 
 const programs = [
   {
     image: digiLibraryImg,
-    title: 'Top Product 1',
+    title: 'Matrix Fitness Treadmill',
     description:
-      'Helps to get indoor running and help in achieving the fit ness goals at home  askljfd asdkfj asdf asdkjlf asdkjlf asdkjlf ',
-    buttonText: 'Read more',
-    link: '/services',
+      'Commercial-grade treadmill designed for heavy use — advanced cushioning, multi-program console, and reliable motor for smooth, quiet performance. Ideal for gyms and premium home setups.',
+    buttonText: 'View Details',
+    link: '/products',
   },
   {
     image: studyFinImg,
-    title: 'Top product 2',
+    title: 'REVO 220 Cosco Bike',
     description:
-      'Helps to get indoor running and help in achieving the fit ness goals at home adsfj asdoisfj asdjf akkjdf askldjf asdlkfj',
-    buttonText: 'Read More',
-    link: '/services',
+      'Ergonomic indoor cycle with adjustable resistance, reinforced frame and comfortable saddle — perfect for HIIT and steady-state cardio sessions at home or studio.',
+    buttonText: 'View Details',
+    link: '/products',
   },
   {
     image: studyMallImg,
-    title: 'Activities',
+    title: 'CE 3013 Incline Press',
     description:
-      'Our Livelihood Program focuses on equipping individuals—especially women, youth, and marginalized communities—with the skills, resources, and confidence.',
-    buttonText: 'Read more',
-    link: '/services',
+      'Robust incline press machine built for targeted chest training — smooth guide rails, adjustable seat and heavy-duty construction for consistent performance and safety.',
+    buttonText: 'View Details',
+    link: '/products',
   },
 ];
 
@@ -37,6 +41,7 @@ const ProgramHighlight = () => {
   const [visible, setVisible] = useState(false);
   const revealed = useRef(false);
 
+  // IntersectionObserver — remains as before (keeps existing visible logic)
   useEffect(() => {
     const observer = new window.IntersectionObserver(
       ([entry]) => {
@@ -51,6 +56,7 @@ const ProgramHighlight = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Scroll handler — unchanged
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY === 0) {
@@ -64,24 +70,71 @@ const ProgramHighlight = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Initialize AOS: enabled only on small screens (<=1000px)
+  useEffect(() => {
+    AOS.init({
+      // mobile-only: disable when larger than small/tablet so desktop remains untouched
+      disable: function () {
+        return window.innerWidth > 1000;
+      },
+      offset: 120, // offset (in px) from the original trigger point
+      duration: 700, // animation duration
+      easing: 'ease-out',
+      once: true, // whether animation should happen only once - true is usually good for performance
+      mirror: false, // whether elements should animate out while scrolling past them
+    });
+
+    // Recalculate when window resizes (so AOS enable/disable adjusts)
+    const onResize = () => {
+      AOS.refresh();
+    };
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  // When our visible state changes (from IntersectionObserver), refresh AOS so it picks up new elements
+  useEffect(() => {
+    if (visible) {
+      // small delay so DOM updates (class .visible) before AOS recalculates
+      setTimeout(() => AOS.refresh(), 50);
+    }
+  }, [visible]);
+
   return (
     <>
       <style>{`
         .program-highlight-section {
           position: relative;
-          z-index: 10;
-          margin-top: -221px; /* desktop overlap */
-          margin-bottom: 4rem;
+          z-index: 5; /* keep lower than hero caption */
+          margin-bottom: 2rem;
           padding: 0;
           background: transparent !important;
           border-radius: 0 !important;
+          /* Prevent invisible/translated cards from intercepting clicks on desktop */
+          pointer-events: none;
         }
 
-        /* On tablets and phones, push the section below the hero */
-        @media (max-width: 992px) {
+        /* Desktop: keep the original negative overlap you had */
+        @media (min-width: 701px) {
           .program-highlight-section {
-            margin-top: 40px !important; /* appear below hero on mobile */
+            margin-top: -221px; /* desktop overlap - unchanged */
           }
+        }
+
+        /* Mobile: appear right after hero with a small gap */
+        @media (max-width: 700px) {
+          .program-highlight-section {
+            margin-top: 2rem; /* small gap below hero */
+            pointer-events: auto; /* mobile: allow interactions */
+          }
+        }
+
+        /* When container is visible, enable interactions */
+        .program-highlight-container.visible {
+          pointer-events: auto;
         }
 
         .program-highlight-container {
@@ -109,11 +162,16 @@ const ProgramHighlight = () => {
           opacity: 0;
           transform: translateY(60px);
           transition: opacity 0.9s cubic-bezier(.4,0,.2,1), transform 0.9s cubic-bezier(.4,0,.2,1), box-shadow 0.2s;
+          /* don't accept pointer events until container is visible on desktop */
+          pointer-events: none;
         }
 
+        /* Desktop visible rule (unchanged) */
         .program-highlight-container.visible .program-card {
           opacity: 1;
           transform: translateY(0);
+          /* enable pointer events when visible */
+          pointer-events: auto;
         }
 
         .program-highlight-container.visible .program-card:nth-child(1) {
@@ -134,10 +192,11 @@ const ProgramHighlight = () => {
         .program-card-image-rect {
           width: 100%;
           height: 220px;
-          object-fit: cover;
+          object-fit: contain;
           border-top-left-radius: 24px;
           border-top-right-radius: 24px;
           display: block;
+          background: white;
         }
 
         .program-card-content-rect {
@@ -214,14 +273,17 @@ const ProgramHighlight = () => {
           transform: translateY(-2px) !important;
         }
 
+        /*
+          MOBILE & SMALL TABLET: AOS will handle fade-up
+          keep layout responsive below
+        */
         @media (max-width: 1000px) {
-          .program-card,
-          .program-highlight-container.visible .program-card,
-          .program-highlight-container:not(.visible) .program-card {
-            transition: none !important;
-            transition-delay: 0s !important;
-            opacity: 1 !important;
-            transform: none !important;
+          /* make cards interactive on mobile */
+          .program-card {
+            pointer-events: auto;
+            opacity: 1; /* AOS applies its own styles for the animation; set to 1 so no permanent hiding */
+            transform: none;
+            transition: none;
           }
 
           .program-highlight-container {
@@ -247,19 +309,31 @@ const ProgramHighlight = () => {
       `}</style>
 
       <section className="program-highlight-section" ref={sectionRef}>
+        {/* we keep the visible class — used for desktop behaviour and pointer-event enabling */}
         <div className={`program-highlight-container${visible ? ' visible' : ''}`}>
-          {programs.map((program, index) => (
-            <div className="program-card" key={index}>
-              <img src={program.image} alt={program.title} className="program-card-image-rect" />
-              <div className="program-card-content-rect">
-                <h3 className="program-card-title">{program.title}</h3>
-                <p className="program-card-description">{program.description}</p>
-                <Link to={program.link} className="program-card-button">
-                  {program.buttonText}
-                </Link>
+          {programs.map((program, index) => {
+            // small delay values in ms to match the earlier stagger (AOS expects ms)
+            const delays = [60, 180, 300];
+            const delay = delays[index] || index * 120;
+            return (
+              <div
+                className="program-card"
+                key={index}
+                data-aos="fade-up"
+                data-aos-delay={delay}
+                data-aos-duration="700"
+              >
+                <img src={program.image} alt={program.title} className="program-card-image-rect" />
+                <div className="program-card-content-rect">
+                  <h3 className="program-card-title">{program.title}</h3>
+                  <p className="program-card-description">{program.description}</p>
+                  <Link to={program.link} className="program-card-button">
+                    {program.buttonText}
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </>

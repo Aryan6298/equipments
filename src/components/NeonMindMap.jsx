@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import "./NeonMindMap.css";
-import img01 from "../assets/images/crousal/crousalimage1.jpg"
+import img01 from "../assets/images/handshake.avif"
 
 export default function NeonMindMap() {
   const isMobile = window.innerWidth <= 720;
@@ -10,11 +10,11 @@ export default function NeonMindMap() {
       label: "Consumer-Centric Product Range",
       x: 80,
       y: 35,
-      img: "https://images.unsplash.com/photo-1761835563595-630c9f52c67e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=764",
+      img: img01,
     },
-    { id: 1, label: "Reliable After-Sales", x: 80, y: 65, img: "https://images.unsplash.com/photo-1638262052640-82e94d64664a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170", },
-    { id: 2, label: "Customized Equipment Packages", x: 50, y: 85 , img: "https://images.unsplash.com/photo-1638262052640-82e94d64664a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170", },
-    { id: 3, label: "Value-Driven Pricing", x: 20, y: 65 ,img: "https://images.unsplash.com/photo-1638262052640-82e94d64664a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170", },
+    { id: 1, label: "Reliable After-Sales", x: 80, y: 65, img: img01, },
+    { id: 2, label: "Customized Equipment Packages", x: 50, y: 85 , img: img01, },
+    { id: 3, label: "Value-Driven Pricing", x: 20, y: 65 ,img: img01, },
     {
       id: 4,
       label: (
@@ -24,14 +24,14 @@ export default function NeonMindMap() {
       ),
       x: isMobile ? 20 : 20,
       y: 35,
-      img: "https://images.unsplash.com/photo-1638262052640-82e94d64664a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+      img: img01,
     },
     {
       id: 5,
       label: "Brand Value & Trust",
       x: 50,
       y: 15,
-      img: "https://images.unsplash.com/photo-1638262052640-82e94d64664a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+      img: img01,
     },
   ];
 

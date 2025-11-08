@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import img1 from '../assets/images/contact.png'; // replace with your trainers image
+import img1 from '../assets/images/contact.webp'; // replace with your trainers image
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwprnkqv';
 
@@ -272,6 +272,10 @@ const ContactFormSection = () => {
     .contact-wrap { gap: 1rem; }
     .contact-image, .contact-box { flex: 1 1 100%; min-height: 360px; }
     .contact-box { padding: 1.25rem; }
+  }
+             @media (max-width: 768px) {
+  .container{
+    margin-top: 10vh !important;
   }
 `}</style>
 

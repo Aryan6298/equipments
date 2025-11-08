@@ -115,6 +115,13 @@ const About = () => {
             color: #e0e0e0;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
           }
+            /* Mobile only: push page down slightly */
+@media (max-width: 768px) {
+  .containerc {
+    margin-top: 14vh !important;
+  }
+}
+
 
           /* AOS animated elements should be visible but won't cause overflow by themselves */
           [data-aos] { overflow: visible; }

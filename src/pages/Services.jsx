@@ -10,7 +10,7 @@ import srv2 from '../assets/images/crousal/crousalimage3.jpg';
 import srv3 from '../assets/images/crousal/crousalimage4.jpg';
 import srv4 from '../assets/images/crousal/crousalimage1.jpg';
 import srv5 from '../assets/images/runip2-logo.png';
-import srv6 from '../assets/images/contact.png';
+import srv6 from '../assets/images/contact.webp';
 
 const Services = () => {
   useEffect(() => {
@@ -214,7 +214,12 @@ const Services = () => {
             height: 100%;
             object-fit: cover;
           }
+            
         }
+                      @media (max-width: 768px) {
+  .services-container{
+    margin-top: 14vh !important;
+  }
       `}
       </style>
 

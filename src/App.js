@@ -17,6 +17,8 @@ import NotFound from './pages/NotFound';
 import Services from './pages/Services';
 import CustomCursor from './components/Customcursor';
 import ScrollToTop from './components/Scrolltotop';
+import Clients from './pages/Clients';
+import TopProducts from './pages/TopProducts';
 
 // Temporary placeholders — replace with your real components if you have them:
 
@@ -34,7 +36,7 @@ function FloatingWhatsApp() {
 
   return (
     <a
-      href="https://wa.me/+9190099000790"
+      href="https://wa.me/+919009900079"
       target="_blank"
       rel="noopener noreferrer"
       className="floating-whatsapp-btn"
@@ -57,13 +59,7 @@ function FloatingWhatsApp() {
   );
 }
 
-const styles = {
-  overlay1: {
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-};
+
 
 export default function App() {
   useEffect(() => {
@@ -78,7 +74,7 @@ export default function App() {
       <CustomCursor />
          <ScrollToTop />
 
-      <div style={styles.overlay1}>
+   
         <Topbar />
         <NavigationBarBootstrap />
 
@@ -86,13 +82,15 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<ContactFormSection />} />
           <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/services" element={<Services/>} />
+          <Route path="/services" element={<Services />} />
             <Route path="/mediafeatures" element={<Gallery />} />
+                 <Route path="/clients" element={<Clients />} />
+                   <Route path="/products" element={<TopProducts />} />
           <Route path="*" element={< NotFound />} />
         </Routes>
 
         <Footer />
-      </div>
+    
     </>
   );
 }

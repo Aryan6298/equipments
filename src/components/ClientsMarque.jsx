@@ -2,18 +2,33 @@ import React, { useState, useRef, useEffect } from 'react';
 import Marquee from 'react-fast-marquee';
 
 // import your client logos
-import client1 from '../assets/images/crousal/crousalimage1.jpg';
-import client2 from '../assets/images/crousal/crousalimage1.jpg';
-import client3 from '../assets/images/crousal/crousalimage1.jpg';
-import client4 from '../assets/images/crousal/crousalimage1.jpg';
-import client5 from '../assets/images/crousal/crousalimage1.jpg';
-import client6 from '../assets/images/crousal/crousalimage1.jpg';
-import client7 from '../assets/images/crousal/crousalimage1.jpg';
-import client8 from '../assets/images/crousal/crousalimage1.jpg';
-import client9 from '../assets/images/crousal/crousalimage1.jpg';
-import client10 from '../assets/images/crousal/crousalimage1.jpg';
-import client11 from '../assets/images/crousal/crousalimage1.jpg';
-import client12 from '../assets/images/crousal/crousalimage1.jpg';
+import client1 from '../assets/images/clients-logo/client01.png';
+import client2 from '../assets/images/clients-logo/client02.png';
+import client3 from '../assets/images/clients-logo/client03.png';
+import client4 from '../assets/images/clients-logo/client04.png';
+import client5 from '../assets/images/clients-logo/client05.png';
+import client6 from '../assets/images/clients-logo/client06.png';
+import client7 from '../assets/images/clients-logo/client07.png';
+import client8 from '../assets/images/clients-logo/client08.png';
+import client9 from '../assets/images/clients-logo/client09.png';
+import client10 from '../assets/images/clients-logo/client10.png';
+import client11 from '../assets/images/clients-logo/client11.png';
+import client12 from '../assets/images/clients-logo/client12.png';
+import client13 from '../assets/images/clients-logo/client13.png';
+import client14 from '../assets/images/clients-logo/client14.png';
+import client15 from '../assets/images/clients-logo/client15.png';
+import client16 from '../assets/images/clients-logo/client16.png';
+import client17 from '../assets/images/clients-logo/client17.png';
+import client18 from '../assets/images/clients-logo/client18.png';
+import client19 from '../assets/images/clients-logo/client19.png';
+import client20 from '../assets/images/clients-logo/client20.png';
+import client21 from '../assets/images/clients-logo/client21.png';
+import client22 from '../assets/images/clients-logo/client22.png';
+import client23 from '../assets/images/clients-logo/client23.png';
+import client24 from '../assets/images/clients-logo/client24.png';
+import client25 from '../assets/images/clients-logo/client25.png';
+import client26 from '../assets/images/clients-logo/client26.png';
+import client27 from '../assets/images/clients-logo/client27.png';
 
 const ClientsMarque = () => {
   const [showAllClients, setShowAllClients] = useState(false);
@@ -21,7 +36,9 @@ const ClientsMarque = () => {
 
   const clients = [
     client1, client2, client3, client4, client5, client6,
-    client7, client8, client9, client10, client11, client12
+    client7, client8, client9, client10, client11, client12,client13, client14, client15, client16, client17, client18,
+    client19, client20, client21, client22, client23, client24,
+    client25, client26, client27
   ];
 
   // Auto-collapse logic (4 seconds)

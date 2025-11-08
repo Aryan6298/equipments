@@ -40,7 +40,7 @@ const Topbar = () => {
       <style>{`
         .topbar {
           width: 100%;
-          background: #0f0f0feb;
+          background: #2d2d2df2;
           color: #fff;
           display: flex;
           align-items: center;

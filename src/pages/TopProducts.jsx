@@ -20,39 +20,44 @@ const TopProducts = () => {
 
   const products = [
     {
-      id: 1,
+      id: "cardio",
       title: "Matrix Fitness Treadmill",
       img: prod1,
-    //   price: "₹ 1,45,000",
-      short: "Commercial-grade treadmill with advanced console & shock absorption.",
+      short:
+        "Commercial-grade treadmill with advanced console and shock absorption for a smooth run.",
+      category: "Cardio",
     },
     {
-      id: 2,
+      id: "cardio-bike",
       title: "REVO 220 Cosco Bike",
       img: prod2,
-    //   price: "₹ 28,500",
-      short: "Heavy-duty indoor cycle with adjustable resistance and ergonomic seat.",
+      short:
+        "Heavy-duty indoor cycle with adjustable resistance and ergonomic seat design.",
+      category: "Cardio",
     },
     {
-      id: 3,
+      id: "strength-incline",
       title: "CE 3013 Incline Press",
       img: prod3,
-    //   price: "₹ 78,900",
-      short: "Commercial incline press for chest isolation and progressive overload.",
+      short:
+        "Commercial incline press for effective chest workouts and strength training.",
+      category: "Strength",
     },
     {
-      id: 4,
+      id: "functional-trainer",
       title: "CC 360XL Crossfit 4 Gates",
       img: prod4,
-    //   price: "₹ 2,50,000",
-      short: "Multi-station functional trainer — perfect for gyms & studios.",
+      short:
+        "Multi-station functional trainer — ideal for CrossFit and functional training studios.",
+      category: "Functional",
     },
     {
-      id: 5,
+      id: "strength-cage",
       title: "CE 3048 Power Cage",
       img: prod5,
-    //   price: "₹ 62,000",
-      short: "Sturdy power cage with safeties and pull-up rig — built to last.",
+      short:
+        "Sturdy power cage with safety bars and pull-up rig, perfect for home and commercial gyms.",
+      category: "Strength",
     },
   ];
 
@@ -61,7 +66,6 @@ const TopProducts = () => {
       <style>{`
         .top-products-page {
           background: url('/assets/images/bg-gym.jpg') center/cover no-repeat;
-          /* fallback bg if you have one; replace with your bg image path */
           color: #fff;
           padding: 7rem 0rem 2rem 0rem;
           min-height: 100vh;
@@ -76,7 +80,7 @@ const TopProducts = () => {
         .hero h1 {
           font-size: 2.6rem;
           margin-bottom: 0.5rem;
-          color: #2fe37a; /* green accent */
+          color: #2fe37a;
           text-shadow: 0 6px 18px rgba(0,0,0,0.6);
         }
 
@@ -142,12 +146,6 @@ const TopProducts = () => {
           gap: .5rem;
         }
 
-        // .price {
-        //   font-weight: 800;
-        //   color: #2fe37a;
-        //   font-size: 1.05rem;
-        // }
-
         .btn-cta {
           background: linear-gradient(90deg, #1f9d4f, #2fe37a);
           color: #0a0a0a;
@@ -208,7 +206,6 @@ const TopProducts = () => {
         .quickview .info h3 { color: #2fe37a; margin-bottom: .35rem; }
         .quickview .info p { color: rgba(255,255,255,0.8); }
 
-        /* responsive tweaks */
         @media (max-width: 768px) {
           .product-img { height: 180px; }
           .product-body { padding: 0.85rem; }
@@ -216,27 +213,33 @@ const TopProducts = () => {
           .quickview img { width: 100%; }
           .quickview .info { width: 100%; }
         }
-          
-                      @media (max-width: 768px) {
-  .container{
-    margin-top: 11vh !important;
-  }
-    
+
+        @media (max-width: 768px) {
+          .container{
+            margin-top: 11vh !important;
+          }
+        }
       `}</style>
 
       <div className="container">
         <div className="hero" data-aos="fade-up">
-          <h1>Top Products</h1>
+          <h1>Sports Products</h1>
           <p>
-            Handpicked, high-performance equipment for gyms and fitness centers.
-            Quality-tested and backed by our service & installation expertise.
+            Explore our curated range of premium fitness and sports equipment —
+            built for performance, safety, and durability.
           </p>
         </div>
 
         <div className="products-container" data-aos="fade-up">
           <div className="row">
-            {products.map((p) => (
-              <div key={p.id} className="col-12 col-sm-6 col-lg-4">
+            {products.map((p, index) => (
+              <div
+                key={p.id}
+                id={p.id} // 🔹 Added IDs for hash routing
+                className="col-12 col-sm-6 col-lg-4"
+                data-aos="fade-up"
+                data-aos-delay={100 + index * 50}
+              >
                 <div className="product-card position-relative">
                   <div className="ribbon">TOP</div>
                   <img className="product-img" src={p.img} alt={p.title} />
@@ -244,15 +247,12 @@ const TopProducts = () => {
                     <div className="product-title">{p.title}</div>
                     <div className="product-short">{p.short}</div>
                     <div className="product-footer">
-                      {/* <div className="price">{p.price}</div> */}
-                      <div>
-                        <button
-                          className="btn-cta"
-                          onClick={() => setQuickView(p)}
-                        >
-                          Quick View
-                        </button>
-                      </div>
+                      <button
+                        className="btn-cta"
+                        onClick={() => setQuickView(p)}
+                      >
+                        Quick View
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -275,9 +275,6 @@ const TopProducts = () => {
               <img src={quickView.img} alt={quickView.title} />
               <div className="info">
                 <h3>{quickView.title}</h3>
-                <p style={{ fontWeight: 800, marginBottom: 8 }}>
-                  {quickView.price}
-                </p>
                 <p>{quickView.short}</p>
                 <p style={{ marginTop: 12 }}>
                   <strong>Key features:</strong>
@@ -290,10 +287,9 @@ const TopProducts = () => {
                 <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
                   <button
                     className="btn-cta"
-                    onClick={() => {
-                      // example action - replace with real navigation / purchase flow
-                      alert("Enquire clicked for " + quickView.title);
-                    }}
+                    onClick={() =>
+                      alert("Enquire clicked for " + quickView.title)
+                    }
                   >
                     Enquire Now
                   </button>

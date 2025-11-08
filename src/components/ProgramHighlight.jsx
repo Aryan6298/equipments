@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import studyMallImg from '../assets/images/products/matrix-fitness-treadmill-500x500.webp';
+import digiLibraryImg from '../assets/images/products/matrix-fitness-treadmill-500x500.webp';
 import studyFinImg from '../assets/images/products/revo-220-cosco-treadmill-500x500.webp';
-import digiLibraryImg from '../assets/images/products/ce-3013-incline-press-machine-500x500.webp';
+import studyMallImg  from '../assets/images/products/ce-3013-incline-press-machine-500x500.webp';
 
 const programs = [
   {

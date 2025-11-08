@@ -12,6 +12,10 @@ const NavigationBarBootstrap = () => {
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false); // mobile services dropdown
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false); // desktop hover dropdown
 
+  // NEW: products dropdown states
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
+  const [desktopProductsOpen, setDesktopProductsOpen] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -40,11 +44,14 @@ const NavigationBarBootstrap = () => {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Close mobile menu when route changes
+  // Close mobile menu and dropdowns when route changes
   useEffect(() => {
     setMobileMenuOpen(false);
     setMobileDropdownOpen(false);
     setDesktopDropdownOpen(false);
+    // NEW: close products menus too
+    setMobileProductsOpen(false);
+    setDesktopProductsOpen(false);
   }, [location.pathname]);
 
   // Show/hide navbar margin on scroll (mobile uses smaller initial offset)
@@ -78,7 +85,7 @@ const NavigationBarBootstrap = () => {
 
   // When route changes with a hash (e.g., /services#foo), scroll to target
   useEffect(() => {
-    if (location.pathname === '/services' && location.hash) {
+    if ((location.pathname === '/services' || location.pathname === '/products') && location.hash) {
       const id = location.hash.replace('#', '');
       const t = setTimeout(() => scrollToId(id), 120);
       return () => clearTimeout(t);
@@ -90,6 +97,7 @@ const NavigationBarBootstrap = () => {
   const handleNavLinkClick = useCallback((path) => {
     setMobileMenuOpen(false);
     setMobileDropdownOpen(false);
+    setMobileProductsOpen(false); // also close products mobile
     if (path) navigate(path);
   }, [navigate]);
 
@@ -111,6 +119,23 @@ const NavigationBarBootstrap = () => {
     }
   };
 
+  // NEW: Handle clicking a product dropdown item (same behavior as services but for /products)
+  const handleProductClick = (e, sectionId) => {
+    e && e.preventDefault();
+    setMobileMenuOpen(false);
+    setMobileProductsOpen(false);
+
+    if (location.pathname === '/products') {
+      scrollToId(sectionId);
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', `/products#${sectionId}`);
+      }
+    } else {
+      navigate(`/products#${sectionId}`);
+      setTimeout(() => scrollToId(sectionId), 320);
+    }
+  };
+
   // Toggle mobile menu collapse
   const toggleMobileMenu = () => setMobileMenuOpen((v) => !v);
 
@@ -118,6 +143,12 @@ const NavigationBarBootstrap = () => {
   const toggleMobileDropdown = (e) => {
     e && e.preventDefault();
     setMobileDropdownOpen((v) => !v);
+  };
+
+  // NEW: Toggle mobile products dropdown
+  const toggleMobileProductsDropdown = (e) => {
+    e && e.preventDefault();
+    setMobileProductsOpen((v) => !v);
   };
 
   return (
@@ -348,7 +379,7 @@ const NavigationBarBootstrap = () => {
           {/* Navigation Links (collapse controlled by state) */}
           <div
             id="mainNavbar"
-            className={`collapse navbar-collapse justify-content-center ${mobileMenuOpen ? 'show' : ''}`}
+            className={`collapse navbar-collapse justify-content-end ${mobileMenuOpen ? 'show' : ''}`}
           >
             <ul className="navbar-nav mb-2 mb-lg-0 gap-lg-3">
               <li className="nav-item">
@@ -442,11 +473,11 @@ const NavigationBarBootstrap = () => {
                   </li>
                   <li>
                     <a
-                      href="/services#facility-design"
+                      href="/services#facility"
                       className="dropdown-item"
                       onClick={(e) => handleServiceClick(e, 'facility-design')}
                     >
-                      Facility Design & Consulting
+                      Facility Consulting
                     </a>
                   </li>
                   <li>
@@ -528,15 +559,145 @@ const NavigationBarBootstrap = () => {
                 </ul>
               </li>
 
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/products"
-                  onClick={() => handleNavLinkClick('/products')}
-                >
-                  Products
-                </NavLink>
+              {/* ===== NEW: Products Dropdown (behaves like Services) ===== */}
+              <li
+                className={`nav-item dropdown ${desktopProductsOpen ? 'show' : ''}`}
+                onMouseEnter={() => setDesktopProductsOpen(true)}
+                onMouseLeave={() => setDesktopProductsOpen(false)}
+              >
+                <div className="nav-dropdown-combo d-flex align-items-center position-relative">
+                  <NavLink
+                    className="nav-link d-flex align-items-center gap-1 dropdown-toggle"
+                    to="/products"
+                    onClick={(e) => {
+                      if (window.innerWidth < 992) {
+                        // mobile: clicking main label toggles mobile products dropdown
+                        e.preventDefault();
+                        toggleMobileProductsDropdown(e);
+                      } else {
+                        // desktop: go to products page and scroll top
+                        handleNavLinkClick('/products');
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                      }
+                    }}
+                  >
+                    Sports Products
+                  </NavLink>
+
+                  {/* small triangle icon for mobile */}
+                  <button
+                    className="btn btn-link p-0 ms-1 d-lg-none"
+                    onClick={toggleMobileProductsDropdown}
+                    aria-expanded={mobileProductsOpen}
+                    aria-label="Toggle products submenu"
+                    style={{ color: 'inherit' }}
+                  >
+                    <IoMdArrowDropdown
+                      className="dropdown-icon"
+                      style={{ transform: mobileProductsOpen ? 'rotate(180deg)' : undefined }}
+                    />
+                  </button>
+                </div>
+
+                {/* Mobile accordion for products */}
+                <ul className={`mobile-dropdown d-lg-none${mobileProductsOpen ? ' open' : ''}`} role="menu" aria-label="Products submenu">
+                  <li>
+                    <a
+                      href="/products#top-products"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'top-products')}
+                    >
+                      Top Products
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#cardio"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'cardio')}
+                    >
+                      Cardio Equipment
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#strength"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'strength')}
+                    >
+                      Strength Equipment
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#accessories"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'accessories')}
+                    >
+                      Accessories
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#custom-solutions"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'custom-solutions')}
+                    >
+                      Custom Solutions
+                    </a>
+                  </li>
+                </ul>
+
+                {/* Desktop dropdown for products */}
+                <ul className="dropdown-menu d-none d-lg-block" role="menu" aria-label="Products submenu">
+                  <li>
+                    <a
+                      href="/products#top-products"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'top-products')}
+                    >
+                      Top Products
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#cardio"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'cardio')}
+                    >
+                      Cardio Equipment
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#strength"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'strength')}
+                    >
+                      Strength Equipment
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#accessories"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'accessories')}
+                    >
+                      Accessories
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/products#custom-solutions"
+                      className="dropdown-item"
+                      onClick={(e) => handleProductClick(e, 'custom-solutions')}
+                    >
+                      Custom Solutions
+                    </a>
+                  </li>
+                </ul>
               </li>
+              {/* ===== end products dropdown ===== */}
 
               <li className="nav-item">
                 <NavLink
